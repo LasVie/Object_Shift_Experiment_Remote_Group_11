@@ -265,7 +265,9 @@
     };
     function getRandomElement(a) { return a[Math.floor(Math.random() * a.length)]; }
 
-    window._allFilenamesPromise = null; window._filenameListCache = {};
+  const FILENAMES_URL = "https://lasvientuexperimentdata.s3.ap-southeast-1.amazonaws.com/Rendered+Images/filenames.json";
+  window._allFilenamesPromise = null;
+  window._filenameListCache = {};
     function fetchImageFilenames(key) {
       if (!window._allFilenamesPromise) {
         window._allFilenamesPromise = fetch("https://lasvientuexperimentdata.s3.ap-southeast-1.amazonaws.com/Rendered+Images/filenames.json", { cache: "force-cache" })
