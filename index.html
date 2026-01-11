@@ -268,17 +268,21 @@
   const FILENAMES_URL = "https://lasvientuexperimentdata.s3.ap-southeast-1.amazonaws.com/Rendered+Images/filenames.json";
   window._allFilenamesPromise = null;
   window._filenameListCache = {};
-    function fetchImageFilenames(key) {
-      if (!window._allFilenamesPromise) {
-        window._allFilenamesPromise = fetch("https://lasvientuexperimentdata.s3.ap-southeast-1.amazonaws.com/Rendered+Images/filenames.json", { cache: "force-cache" })
-          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
-      }
-      if (window._filenameListCache[key]) return Promise.resolve(window._filenameListCache[key]);
-      return window._allFilenamesPromise.then(d => {
-        const match = d.filter(f => f.name.includes(key)).sort((a, b) => a.name.localeCompare(b.name)).map(f => f.name);
-        window._filenameListCache[key] = match; return match;
-      });
+
+  function fetchImageFilenames(key) {
+    if (!window._allFilenamesPromise) {
+      window._allFilenamesPromise = fetch(FILENAMES_URL + "?v=" + Date.now(), { cache: "no-store" })
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
     }
+    if (window._filenameListCache[key]) return Promise.resolve(window._filenameListCache[key]);
+    return window._allFilenamesPromise.then(d => {
+      const match = d.filter(f => f.name.includes(key))
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(f => f.name);
+      window._filenameListCache[key] = match;
+      return match;
+    });
+  }
   </script>
 
   <!-- ====================================================================
